@@ -1,121 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Free Invoice Generator</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#fff;--bg2:#f5f5f5;--text:#000;--muted:#666;--border:#e2e2e2;--accent:#777620;--on-accent:#fff;--sheet:#fff;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#161614;--bg2:#222220;--text:#f2f2ee;--muted:#a3a39a;--border:#3a3a36;--accent:#b5b44a;--on-accent:#111;--sheet:#1e1e1c}}
-:root[data-theme="dark"]{color-scheme:dark;--bg:#161614;--bg2:#222220;--text:#f2f2ee;--muted:#a3a39a;--border:#3a3a36;--accent:#b5b44a;--on-accent:#111;--sheet:#1e1e1c}
-*{box-sizing:inherit}html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;font-size:14px;line-height:20px}
-header.hero{max-width:1100px;margin:0 auto;padding:32px 16px 8px}
-h1{font-size:30px;line-height:36px;margin:0 0 8px;font-weight:700}
-.sub{color:var(--muted);margin:0}
-.wrap{max-width:1100px;margin:0 auto;padding:16px;display:grid;grid-template-columns:1fr 240px;gap:24px;align-items:start}
-.sheet{background:var(--sheet);border:1px solid var(--border);border-radius:6px;padding:32px;box-shadow:1px 1px 0 rgba(0,0,0,.1),3px 3px 0 var(--bg2);min-width:0}
-input,textarea,select{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;width:100%;resize:vertical}
-input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
-textarea{min-height:64px}
-.top{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:24px}
-.title{font-size:30px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;border:0;background:transparent;padding:0;width:auto;max-width:100%}
-.meta{display:grid;grid-template-columns:auto 160px;gap:8px;align-items:center;justify-content:end}
-.meta label{color:var(--muted);text-align:right;font-weight:500}
-.parties{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
-.lbl{display:block;font-size:12px;line-height:16px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.row{display:grid;grid-template-columns:1fr 80px 110px 110px 32px;gap:8px;margin-bottom:8px;align-items:start}
-.head{background:var(--accent);color:var(--on-accent);border-radius:6px;padding:8px;font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px}
-.head span:nth-child(n+2){text-align:right}
-.row .amt{text-align:right;padding:8px 4px;font-weight:500}
-.row input[type=number]{text-align:right}
-.x{background:none;border:0;color:var(--muted);font-size:18px;cursor:pointer;padding:6px}
-.x:hover{color:var(--text)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:6px;padding:10px 16px;font:inherit;font-weight:500;cursor:pointer;border:1px solid var(--accent);background:transparent;color:var(--accent)}
-.btn.primary{background:var(--accent);color:var(--on-accent);width:100%;font-weight:600}
-.bottom{display:grid;grid-template-columns:1fr 280px;gap:24px;margin-top:24px}
-.tot{display:grid;grid-template-columns:1fr 110px;gap:8px;align-items:center}
-.tot .k{color:var(--muted);text-align:right;font-weight:500}.tot .v{text-align:right;font-weight:500}
-.tot input{text-align:right}
-.grand{font-weight:700;font-size:18px;color:var(--text)!important}
-.side{position:sticky;top:16px;display:flex;flex-direction:column;gap:16px}
-.card{background:var(--bg2);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:8px}
-.note{font-size:12px;color:var(--muted);margin:0}
-[hidden]{display:none!important}
-.left{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
-.logo{display:flex;align-items:center;justify-content:center;min-width:140px;min-height:72px;max-width:220px;border:1px dashed var(--border);border-radius:6px;color:var(--muted);cursor:pointer;padding:8px;font-weight:500}
-.logo img{max-height:80px;max-width:200px;display:block}
-.logo.has{border-color:transparent;padding:0}
-.rm{background:none;border:0;color:var(--muted);font:inherit;font-size:12px;cursor:pointer;padding:0;text-decoration:underline}
-#pdfHost{position:absolute;left:-10000px;top:0}
-@media(max-width:860px){.wrap{grid-template-columns:1fr}.side{position:static;order:-1}.parties,.bottom{grid-template-columns:1fr}.sheet{padding:16px}.meta{justify-content:start}}
-@media(max-width:640px){.row{grid-template-columns:1fr 64px 84px}.row .amt{grid-column:1/3;text-align:left}.head{display:none}.row .desc{grid-column:1/4}}
-@media print{
-:root{--bg:#fff;--bg2:#fff;--text:#000;--muted:#555;--border:#ddd;--accent:#777620;--on-accent:#fff;--sheet:#fff;color-scheme:light}
-header.hero,.side,.addbtn,.x{display:none!important}
-.logo{border:0!important;padding:0!important}.rm{display:none!important}
-.wrap{display:block;padding:0;max-width:none}.sheet{border:0;box-shadow:none;padding:0}
-input,textarea,select{border:0!important;padding:2px 0!important;resize:none;background:transparent!important;-webkit-appearance:none;appearance:none}
-.row{grid-template-columns:1fr 80px 110px 110px}.head{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-textarea.empty,.empty{display:none}
-}
-</style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-</head>
-<body>
-<header class="hero">
-<h1 id="h1">Free Invoice Generator</h1>
-<p class="sub" id="sub">Fill in the details, pick a language and currency, then download your invoice as a PDF.</p>
-</header>
-<div class="wrap">
-<main class="sheet" id="sheet">
-<div class="top">
-<div class="left"><label class="logo" for="logo" id="logoLbl"><img id="logoImg" alt="" hidden><span id="logoTxt">+ Add logo</span></label><input type="file" id="logo" accept="image/*" hidden><button class="rm" id="logoX" hidden aria-label="Remove logo">✕</button>
-<input class="title" id="title" value="Invoice" aria-label="Title"></div>
-<div class="meta">
-<label id="l-num" for="num">#</label><input id="num" value="1">
-<label id="l-date" for="date">Date</label><input id="date" type="date">
-<label id="l-due" for="due">Due Date</label><input id="due" type="date">
-</div>
-</div>
-<div class="parties">
-<div><span class="lbl" id="l-from">From</span><textarea id="from" data-ph="whoFrom"></textarea></div>
-<div><span class="lbl" id="l-to">Bill To</span><textarea id="to" data-ph="whoTo"></textarea></div>
-</div>
-<div class="row head"><span id="h-desc">Item</span><span id="h-qty">Qty</span><span id="h-rate">Rate</span><span id="h-amt">Amount</span><span></span></div>
-<div id="items"></div>
-<button class="btn addbtn" id="add">+ Add item</button>
-<div class="bottom">
-<div>
-<span class="lbl" id="l-notes">Notes</span><textarea id="notes" data-ph="notesPh"></textarea>
-<span class="lbl" id="l-terms" style="margin-top:16px">Terms</span><textarea id="terms" data-ph="termsPh"></textarea>
-</div>
-<div class="tot">
-<span class="k" id="k-sub">Subtotal</span><span class="v" id="v-sub"></span>
-<span class="k"><span id="k-disc">Discount</span> %</span><input type="number" id="disc" min="0" step="any" value="0">
-<span class="k"><span id="k-tax">Tax</span> %</span><input type="number" id="tax" min="0" step="any" value="0">
-<span class="k" id="k-ship">Shipping</span><input type="number" id="ship" min="0" step="any" value="0">
-<span class="k grand" id="k-total">Total</span><span class="v grand" id="v-total"></span>
-<span class="k" id="k-paid">Amount Paid</span><input type="number" id="paid" min="0" step="any" value="0">
-<span class="k grand" id="k-bal">Balance Due</span><span class="v grand" id="v-bal"></span>
-</div>
-</div>
-</main>
-<aside class="side">
-<button class="btn primary" id="dl">⬇ <span id="t-dl">Download PDF</span></button>
-<div class="card">
-<label class="lbl" for="lang" id="t-lang">Language</label>
-<select id="lang"></select>
-<label class="lbl" for="cur" id="t-cur" style="margin-top:8px">Currency</label>
-<select id="cur"></select>
-</div>
-</aside>
-<div id="pdfHost"></div>
-</div>
-<script>
 const T={
 en:{invoice:"Invoice",from:"From",to:"Bill To",date:"Date",due:"Due Date",item:"Item",qty:"Qty",rate:"Rate",amt:"Amount",add:"+ Add item",notes:"Notes",terms:"Terms",sub:"Subtotal",disc:"Discount",tax:"Tax",ship:"Shipping",total:"Total",paid:"Amount Paid",bal:"Balance Due",dl:"Download PDF",lang:"Language",cur:"Currency",whoFrom:"Who is this from?",whoTo:"Who is this to?",notesPh:"Notes – any relevant information",termsPh:"Terms and conditions, late fees, payment methods",itemPh:"Description of item/service",h1:"Free Invoice Generator",sub2:"Fill in the details, pick a language and currency, then download your invoice as a PDF.",hint:"In the print dialog choose “Save as PDF” as the destination."},
 es:{invoice:"Factura",from:"De",to:"Facturar a",date:"Fecha",due:"Vencimiento",item:"Artículo",qty:"Cant.",rate:"Precio",amt:"Importe",add:"+ Añadir artículo",notes:"Notas",terms:"Condiciones",sub:"Subtotal",disc:"Descuento",tax:"Impuesto",ship:"Envío",total:"Total",paid:"Importe pagado",bal:"Saldo pendiente",dl:"Descargar PDF",lang:"Idioma",cur:"Moneda",whoFrom:"¿De quién es?",whoTo:"¿Para quién es?",notesPh:"Notas: información relevante",termsPh:"Condiciones, recargos por demora, formas de pago",itemPh:"Descripción del artículo/servicio",h1:"Generador de facturas gratis",sub2:"Rellena los datos, elige idioma y moneda y descarga tu factura en PDF.",hint:"En el diálogo de impresión elige «Guardar como PDF»."},
@@ -125,6 +7,7 @@ pt:{invoice:"Fatura",from:"De",to:"Faturar para",date:"Data",due:"Vencimento",it
 hi:{invoice:"चालान",from:"प्रेषक",to:"बिल प्राप्तकर्ता",date:"तारीख",due:"देय तिथि",item:"वस्तु",qty:"मात्रा",rate:"दर",amt:"राशि",add:"+ वस्तु जोड़ें",notes:"टिप्पणियाँ",terms:"नियम व शर्तें",sub:"उप-योग",disc:"छूट",tax:"कर",ship:"शिपिंग",total:"कुल",paid:"भुगतान की गई राशि",bal:"बकाया राशि",dl:"PDF डाउनलोड करें",lang:"भाषा",cur:"मुद्रा",whoFrom:"यह किसकी तरफ से है?",whoTo:"यह किसके लिए है?",notesPh:"टिप्पणियाँ – कोई भी ज़रूरी जानकारी",termsPh:"नियम, विलंब शुल्क, भुगतान के तरीके",itemPh:"वस्तु/सेवा का विवरण",h1:"मुफ़्त चालान जनरेटर",sub2:"विवरण भरें, भाषा और मुद्रा चुनें, फिर अपना चालान PDF में डाउनलोड करें।",hint:"प्रिंट डायलॉग में “Save as PDF” चुनें।"}
 };
 const LOGO={en:"+ Add logo",es:"+ Añadir logo",fr:"+ Ajouter un logo",de:"+ Logo hinzufügen",pt:"+ Adicionar logo",hi:"+ लोगो जोड़ें"};
+const FOOT={en:"Your data never leaves your browser.",es:"Tus datos nunca salen de tu navegador.",fr:"Vos données ne quittent jamais votre navigateur.",de:"Ihre Daten verlassen nie Ihren Browser.",pt:"Seus dados nunca saem do seu navegador.",hi:"आपका डेटा आपके ब्राउज़र से बाहर नहीं जाता।"};
 const LN={en:"English",es:"Español",fr:"Français",de:"Deutsch",pt:"Português",hi:"हिन्दी"};
 const CUR=["USD","EUR","GBP","INR","JPY","AUD","CAD","CHF","CNY","AED","SGD","BRL","MXN","ZAR"];
 const $=id=>document.getElementById(id);
@@ -151,7 +34,7 @@ if(!prev||$("title").value===prev){$("title").value=t.invoice}$("title").dataset
 const m={"l-from":"from","l-to":"to","l-date":"date","l-due":"due","h-desc":"item","h-qty":"qty","h-rate":"rate","h-amt":"amt","add":"add","l-notes":"notes","l-terms":"terms","k-sub":"sub","k-disc":"disc","k-tax":"tax","k-ship":"ship","k-total":"total","k-paid":"paid","k-bal":"bal","t-dl":"dl","t-lang":"lang","t-cur":"cur","h1":"h1","sub":"sub2"};
 for(const k in m)$(k).textContent=t[m[k]];
 document.querySelectorAll("[data-ph]").forEach(e=>e.placeholder=t[e.dataset.ph]);
-$("logoTxt").textContent=LOGO[lang];document.documentElement.lang=lang;renderItems();totals();
+$("logoTxt").textContent=LOGO[lang];$("f-priv").textContent=FOOT[lang];document.documentElement.lang=lang;renderItems();totals();
 }
 $("lang").onchange=e=>{lang=e.target.value;applyLang()};
 $("cur").onchange=e=>{cur=e.target.value;renderItems();totals()};
@@ -193,9 +76,27 @@ try{
 const blob=await makePdf(),name=(($("title").value||"Invoice")+"-"+$("num").value).replace(/[\\/:*?"<>|]/g,"").trim()+".pdf";
 if(dls)await dls.save({filename:name,data:blob});
 else{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove()}
+saveHistory();
 }catch(e){if(!e||e.code!=="declined")alert("Could not create the PDF. Please try again.")}
 finally{b.disabled=false}};
+let editId=null;
+function snapshot(){
+const sub=items.reduce((x,i)=>x+i.q*i.r,0),dv=sub*(+$("disc").value||0)/100,tv=(sub-dv)*(+$("tax").value||0)/100,total=sub-dv+tv+(+$("ship").value||0);
+return{id:editId||("i"+Date.now()),savedAt:Date.now(),lang,cur,title:$("title").value,num:$("num").value,date:$("date").value,due:$("due").value,from:$("from").value,to:$("to").value,items:items.map(i=>({...i})),disc:$("disc").value,tax:$("tax").value,ship:$("ship").value,paid:$("paid").value,notes:$("notes").value,terms:$("terms").value,total,logo};
+}
+function saveHistory(){
+try{
+let list=JSON.parse(localStorage.getItem("inv_history")||"[]");const d=snapshot();editId=d.id;
+list=[d,...list.filter(x=>x.id!==d.id)].slice(0,30);
+try{localStorage.setItem("inv_history",JSON.stringify(list))}catch(e){list.forEach(x=>{if(x.id!==d.id)x.logo=""});localStorage.setItem("inv_history",JSON.stringify(list))}
+}catch(e){}
+}
+function loadInv(d){
+editId=d.id;lang=d.lang||"en";cur=d.cur||"USD";$("lang").value=lang;$("cur").value=cur;
+$("title").value=d.title;$("title").dataset.auto="__loaded";
+["num","date","due","from","to","disc","tax","ship","paid","notes","terms"].forEach(k=>$(k).value=d[k]??"");
+items=(d.items&&d.items.length?d.items:[{d:"",q:1,r:0}]).map(i=>({d:i.d||"",q:+i.q||0,r:+i.r||0}));
+setLogo(d.logo||"");
+}
+try{const raw=localStorage.getItem("inv_edit");if(raw){localStorage.removeItem("inv_edit");loadInv(JSON.parse(raw))}}catch(e){}
 applyLang();
-</script>
-</body>
-</html>
