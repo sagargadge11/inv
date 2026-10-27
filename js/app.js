@@ -7,11 +7,10 @@ pt:{invoice:"Fatura",from:"De",to:"Faturar para",date:"Data",due:"Vencimento",it
 hi:{invoice:"चालान",from:"प्रेषक",to:"बिल प्राप्तकर्ता",date:"तारीख",due:"देय तिथि",item:"वस्तु",qty:"मात्रा",rate:"दर",amt:"राशि",add:"+ वस्तु जोड़ें",notes:"टिप्पणियाँ",terms:"नियम व शर्तें",sub:"उप-योग",disc:"छूट",tax:"कर",ship:"शिपिंग",total:"कुल",paid:"भुगतान की गई राशि",bal:"बकाया राशि",dl:"PDF डाउनलोड करें",lang:"भाषा",cur:"मुद्रा",whoFrom:"यह किसकी तरफ से है?",whoTo:"यह किसके लिए है?",notesPh:"टिप्पणियाँ – कोई भी ज़रूरी जानकारी",termsPh:"नियम, विलंब शुल्क, भुगतान के तरीके",itemPh:"वस्तु/सेवा का विवरण",h1:"मुफ़्त चालान जनरेटर",sub2:"विवरण भरें, भाषा और मुद्रा चुनें, फिर अपना चालान PDF में डाउनलोड करें।",hint:"प्रिंट डायलॉग में “Save as PDF” चुनें।"}
 };
 const LOGO={en:"+ Add logo",es:"+ Añadir logo",fr:"+ Ajouter un logo",de:"+ Logo hinzufügen",pt:"+ Adicionar logo",hi:"+ लोगो जोड़ें"};
-const FOOT={en:"Your data never leaves your browser.",es:"Tus datos nunca salen de tu navegador.",fr:"Vos données ne quittent jamais votre navigateur.",de:"Ihre Daten verlassen nie Ihren Browser.",pt:"Seus dados nunca saem do seu navegador.",hi:"आपका डेटा आपके ब्राउज़र से बाहर नहीं जाता।"};
 const LN={en:"English",es:"Español",fr:"Français",de:"Deutsch",pt:"Português",hi:"हिन्दी"};
 const CUR=["USD","EUR","GBP","INR","JPY","AUD","CAD","CHF","CNY","AED","SGD","BRL","MXN","ZAR"];
 const $=id=>document.getElementById(id);
-let lang="en",cur="USD",items=[{d:"",q:1,r:0}];
+let lang=(()=>{try{const l=localStorage.getItem("inv_lang");return l&&T[l]?l:"en"}catch(e){return"en"}})(),cur="USD",items=[{d:"",q:1,r:0}];
 const today=new Date(),iso=d=>d.toISOString().slice(0,10);
 $("date").value=iso(today);$("due").value=iso(new Date(+today+30*864e5));
 $("lang").innerHTML=Object.entries(LN).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");
@@ -34,7 +33,7 @@ if(!prev||$("title").value===prev){$("title").value=t.invoice}$("title").dataset
 const m={"l-from":"from","l-to":"to","l-date":"date","l-due":"due","h-desc":"item","h-qty":"qty","h-rate":"rate","h-amt":"amt","add":"add","l-notes":"notes","l-terms":"terms","k-sub":"sub","k-disc":"disc","k-tax":"tax","k-ship":"ship","k-total":"total","k-paid":"paid","k-bal":"bal","t-dl":"dl","t-lang":"lang","t-cur":"cur","h1":"h1","sub":"sub2"};
 for(const k in m)$(k).textContent=t[m[k]];
 document.querySelectorAll("[data-ph]").forEach(e=>e.placeholder=t[e.dataset.ph]);
-$("logoTxt").textContent=LOGO[lang];$("f-priv").textContent=FOOT[lang];document.documentElement.lang=lang;renderItems();totals();
+$("logoTxt").textContent=LOGO[lang];try{localStorage.setItem("inv_lang",lang)}catch(e){}$("lang").value=lang;window.applyChrome&&window.applyChrome(lang);document.documentElement.lang=lang;renderItems();totals();
 }
 $("lang").onchange=e=>{lang=e.target.value;applyLang()};
 $("cur").onchange=e=>{cur=e.target.value;renderItems();totals()};
@@ -42,8 +41,7 @@ $("add").onclick=()=>{items.push({d:"",q:1,r:0});renderItems();totals()};
 $("items").addEventListener("input",e=>{const el=e.target,i=el.dataset.i;if(i==null)return;items[i][el.dataset.f]=el.dataset.f==="d"?el.value:(+el.value||0);totals()});
 $("items").addEventListener("click",e=>{const x=e.target.dataset.x;if(x==null)return;items.splice(+x,1);if(!items.length)items.push({d:"",q:1,r:0});renderItems();totals()});
 ["disc","tax","ship","paid"].forEach(id=>$(id).addEventListener("input",totals));
-let logo="",dls=null;
-try{claude.use("downloads").then(x=>dls=x).catch(()=>{})}catch(e){}
+let logo="";
 function setLogo(v){logo=v;$("logoImg").src=v||"";$("logoImg").hidden=!v;$("logoTxt").hidden=!!v;$("logoX").hidden=!v;$("logoLbl").classList.toggle("has",!!v)}
 $("logo").onchange=e=>{const f=e.target.files[0];if(!f)return;if(f.size>3e6){alert("Max 3 MB");return}const r=new FileReader();r.onload=()=>setLogo(r.result);r.readAsDataURL(f);e.target.value=""};
 $("logoX").onclick=()=>setLogo("");
@@ -74,8 +72,7 @@ $("dl").onclick=async()=>{
 const b=$("dl");b.disabled=true;
 try{
 const blob=await makePdf(),name=(($("title").value||"Invoice")+"-"+$("num").value).replace(/[\\/:*?"<>|]/g,"").trim()+".pdf";
-if(dls)await dls.save({filename:name,data:blob});
-else{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove()}
+const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove()
 saveHistory();
 }catch(e){if(!e||e.code!=="declined")alert("Could not create the PDF. Please try again.")}
 finally{b.disabled=false}};

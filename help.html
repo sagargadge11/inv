@@ -1,9 +1,25 @@
-<?php
-$pageTitle = 'Help · Invoice Generator';
-$page = 'help';
-$scripts = [];
-require __DIR__ . '/includes/header.php';
-?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Help · Invoice Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="site-header">
+<div class="in">
+<a class="brand" href="index.html">🧾 Invoice<b>Gen</b></a>
+<nav class="nav" aria-label="Main">
+<a href="index.html">Home</a>
+<a href="history.html">History</a>
+<a href="guide.html">Guide</a>
+<a href="help.html" class="active" aria-current="page">Help</a>
+</nav>
+</div>
+</header>
 <main class="page">
 <h1>Help &amp; FAQ</h1>
 <p class="lead">Answers to common questions.</p>
@@ -14,9 +30,17 @@ require __DIR__ . '/includes/header.php';
 <h2>Downloads &amp; history</h2>
 <details><summary>The PDF did not download. What should I do?</summary><p>Allow downloads or pop-ups for this site, then try again. Make sure the logo (if any) is a standard image file such as PNG or JPG.</p></details>
 <details><summary>Where is my history stored?</summary><p>In your browser’s local storage, on this device only. Clearing browser data, using private mode or switching devices means the history will not be available.</p></details>
-<details><summary>How do I change an old invoice?</summary><p>Open <a href="history.php">History</a>, click “Edit / Re-download”, change what you need and download again. The entry is updated, not duplicated.</p></details>
+<details><summary>How do I change an old invoice?</summary><p>Open <a href="history.html">History</a>, click “Edit / Re-download”, change what you need and download again. The entry is updated, not duplicated.</p></details>
 <details><summary>Can I translate an invoice after filling it in?</summary><p>Yes. Switch the language and the labels change; text you typed yourself stays as written.</p></details>
 <h2>Still stuck?</h2>
 <p>Contact the site owner using the details provided by whoever hosts this tool.</p>
 </main>
-<?php require __DIR__ . '/includes/footer.php'; ?>
+<footer class="site-footer">
+<div class="in">
+<span>&copy; <span id="year">2026</span> InvoiceGen. Free to use.</span>
+<span id="f-priv">Your data never leaves your browser.</span>
+</div>
+</footer>
+<script src="js/common.js"></script>
+</body>
+</html>
